@@ -4,16 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ATM {
+public class Atm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +18,6 @@ public class ATM {
 
     private String name;
     private String location;
-    private Integer totalCash;
     private Integer note20;
     private Integer note50;
 }
