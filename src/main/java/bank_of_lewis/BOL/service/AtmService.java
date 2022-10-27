@@ -52,4 +52,31 @@ public class AtmService {
         atmRepo.save(atm);
         return new ResponseEntity<>(editedAtm, HttpStatus.OK);
     }
+
+    public String dispenseNotes (Long id, int cashRequired) {
+        Atm atm = atmRepo.getById(id);
+        int cashToDispense = cashRequired;
+
+        if (cashRequired > atm.calculateTotalCash()) {
+            return "No way sire";
+        }
+
+        int numberOf50s = (int) Math.floorDiv(cashToDispense, 50);
+        if (numberOf50s > 0) {
+            cashToDispense = cashToDispense - (numberOf50s * 50);
+            System.out.println(cashToDispense);
+        }
+
+        int numberOf20s = Math.floorDiv(cashToDispense, 20);
+        if (numberOf20s > 0) {
+            cashToDispense = cashToDispense - (numberOf20s * 20);
+            System.out.println(cashToDispense);
+        }
+
+//        if (cashToDispense != 0) {
+//            return "Cannot dispense this value.";
+//        }
+
+        return numberOf20s + " 20s and " + numberOf50s + " 50s dispensed.";
+    }
 }

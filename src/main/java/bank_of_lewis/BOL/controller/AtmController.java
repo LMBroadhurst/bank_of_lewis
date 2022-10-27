@@ -39,4 +39,10 @@ public class AtmController {
     public ResponseEntity<Atm> editAtm(@RequestParam Long id, @RequestBody Atm atm) {
         return atmService.editAtm(id, atm);
     }
+
+    @PutMapping("/withdrawCash/{id}/{cashRequired}")
+    public String withdrawCash(@RequestParam Long id, @RequestParam int cashRequired) {
+        return atmService.dispenseNotes(id, cashRequired);
+    }
+
 }

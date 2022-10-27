@@ -20,4 +20,12 @@ public class Atm {
     private String location;
     private Integer note20;
     private Integer note50;
+
+    public int calculateTotalCash() {
+
+        int totalIn20s = note20 * 20;
+        int totalIn50s = note50 * 50;
+
+        return totalIn20s + totalIn50s;
+    }
 }
