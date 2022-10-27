@@ -38,7 +38,7 @@ public class AtmService {
         Atm atm = atmOptional.get();
         String note20s = String.valueOf(atm.getNote20());
         String note50s = String.valueOf(atm.getNote50());
-        String returnStatement = "$20 notes: " + note20s + "& $50 notes: " + note50s;
+        String returnStatement = "$20 notes: " + note20s + ". $50 notes: " + note50s + ". Total cash holding: $" + atm.calculateTotalCash();
 
         return new ResponseEntity<>(returnStatement, HttpStatus.OK);
     }
@@ -57,70 +57,75 @@ public class AtmService {
 
     public String dispenseNotes (Long id, int cashRequired) {
         Atm atm = atmRepo.getById(id);
+        String output = "Success";
         int cashToDispense = cashRequired;
 
         if (cashRequired > atm.calculateTotalCash()) {
             return "No way sire";
         }
 
-        if (!Objects.equals(checkForPerfectMatch(atm, cashToDispense), "No match")) {
-            return checkForPerfectMatch(atm, cashToDispense);
-        }
-
-
-
+//        Checking for "perfect match"
         int numberOf50s = Math.floorDiv(cashToDispense, 50);
-        if (numberOf50s > 0) {
-            cashToDispense = cashToDispense - (numberOf50s * 50);
-        }
-
-        if (numberOf50s > atm.getNote50()) {
-            return "Not enough 50s";
-        } else {
+        if (numberOf50s > 0 && cashToDispense % 50 == 0 && numberOf50s < atm.getNote50()) {
             int note50sAfterDispense = atm.getNote50() - numberOf50s;
             atm.setNote50(note50sAfterDispense);
-            System.out.println(atm.getNote50());
+            atmRepo.save(atm);
+
+            return numberOf50s + " $50 notes dispensed. 1";
+        }
+        else if (numberOf50s > 0 && cashToDispense % 50 == 0 && numberOf50s > atm.getNote50()) {
+            numberOf50s = atm.getNote50();
         }
 
-        int numberOf20s = Math.floorDiv(cashToDispense, 20);
-        if (numberOf20s > 0) {
-            cashToDispense = cashToDispense - (numberOf20s * 20);
+//        If $50 denominations cannot be matched, move to combo of $50 and $20
+        int cashLeftToDispense = cashToDispense - (numberOf50s * 50);
+        int numberOf20s = 0;
+        if (numberOf50s > 0 && cashLeftToDispense % 20 == 0 && cashLeftToDispense > 0) {
+            numberOf20s = cashLeftToDispense / 20;
+            atm.setNote50(atm.getNote50() - numberOf50s);
+            atm.setNote20(atm.getNote20() - numberOf20s);
+            atmRepo.save(atm);
+
+            return numberOf20s + " $20 notes dispensed. " + numberOf50s + " $50 notes dispensed. 2";
         }
 
-        if (numberOf20s > atm.getNote20()) {
-            return "Not enough 20s";
-        } else {
-            int note20sAfterDispense = atm.getNote20() - numberOf20s;
-            atm.setNote20(note20sAfterDispense);
-            System.out.println(atm.getNote20());
+//        If more than 1 50, checking if removing a 50 can solve the math
+        cashLeftToDispense = cashRequired;
+        numberOf50s = numberOf50s - 1;
+        cashLeftToDispense = cashLeftToDispense - (numberOf50s * 50);
+        if (numberOf50s >= 1 && cashLeftToDispense % 20 == 0) {
+            numberOf20s = cashLeftToDispense / 20;
+            atm.setNote50(atm.getNote50() - numberOf50s);
+            atm.setNote20(atm.getNote20() - numberOf20s);
+            atmRepo.save(atm);
+
+            return numberOf20s + " $20 notes dispensed. " + numberOf50s + " $50 notes dispensed. 3";
         }
 
-        if (cashToDispense != 0) {
-            return "Cannot dispense this value.";
+//        Final check to see if multiple of $20
+        if (cashRequired % 20 == 0 && atm.totalInNote20() > cashRequired) {
+            int note20sToDispense = cashRequired / 20;
+            atm.setNote20(atm.getNote20() - note20sToDispense);
+            atmRepo.save(atm);
+
+            return note20sToDispense + " 20s. 4";
         }
 
         atmRepo.save(atm);
 
-        return numberOf20s + " 20s and " + numberOf50s + " 50s dispensed.";
+        return "Cannot dispense this value. Please try another. 5.";
     }
 
     public String checkForPerfectMatch(Atm atm, int cashRequired) {
         String output = "No match";
 
-        if (cashRequired % 50 == 0 && atm.totalInNote50() > cashRequired) {
-            int note50sToDispense = cashRequired / 50;
-            atm.setNote50(atm.getNote50() - note50sToDispense);
-            System.out.println(atm.getNote50());
-            atmRepo.save(atm);
-            output = note50sToDispense + " 50s";
-        }
 
         if (cashRequired % 20 == 0 && atm.totalInNote20() > cashRequired) {
             int note20sToDispense = cashRequired / 20;
             atm.setNote20(atm.getNote20() - note20sToDispense);
             System.out.println(atm.getNote20());
             atmRepo.save(atm);
-            output = note20sToDispense + " 20s";
+            return note20sToDispense + " 20s";
         }
 
         return output;
