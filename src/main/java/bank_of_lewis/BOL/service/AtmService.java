@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -61,22 +62,67 @@ public class AtmService {
             return "No way sire";
         }
 
-        int numberOf50s = (int) Math.floorDiv(cashToDispense, 50);
+        if (!Objects.equals(checkForPerfectMatch(atm, cashToDispense), "No match")) {
+            return checkForPerfectMatch(atm, cashToDispense);
+        }
+
+
+
+        int numberOf50s = Math.floorDiv(cashToDispense, 50);
         if (numberOf50s > 0) {
             cashToDispense = cashToDispense - (numberOf50s * 50);
-            System.out.println(cashToDispense);
+        }
+
+        if (numberOf50s > atm.getNote50()) {
+            return "Not enough 50s";
+        } else {
+            int note50sAfterDispense = atm.getNote50() - numberOf50s;
+            atm.setNote50(note50sAfterDispense);
+            System.out.println(atm.getNote50());
         }
 
         int numberOf20s = Math.floorDiv(cashToDispense, 20);
         if (numberOf20s > 0) {
             cashToDispense = cashToDispense - (numberOf20s * 20);
-            System.out.println(cashToDispense);
         }
 
-//        if (cashToDispense != 0) {
-//            return "Cannot dispense this value.";
-//        }
+        if (numberOf20s > atm.getNote20()) {
+            return "Not enough 20s";
+        } else {
+            int note20sAfterDispense = atm.getNote20() - numberOf20s;
+            atm.setNote20(note20sAfterDispense);
+            System.out.println(atm.getNote20());
+        }
+
+        if (cashToDispense != 0) {
+            return "Cannot dispense this value.";
+        }
+
+        atmRepo.save(atm);
 
         return numberOf20s + " 20s and " + numberOf50s + " 50s dispensed.";
     }
+
+    public String checkForPerfectMatch(Atm atm, int cashRequired) {
+        String output = "No match";
+
+        if (cashRequired % 50 == 0 && atm.totalInNote50() > cashRequired) {
+            int note50sToDispense = cashRequired / 50;
+            atm.setNote50(atm.getNote50() - note50sToDispense);
+            System.out.println(atm.getNote50());
+            atmRepo.save(atm);
+            output = note50sToDispense + " 50s";
+        }
+
+        if (cashRequired % 20 == 0 && atm.totalInNote20() > cashRequired) {
+            int note20sToDispense = cashRequired / 20;
+            atm.setNote20(atm.getNote20() - note20sToDispense);
+            System.out.println(atm.getNote20());
+            atmRepo.save(atm);
+            output = note20sToDispense + " 20s";
+        }
+
+        return output;
+    }
+
 }

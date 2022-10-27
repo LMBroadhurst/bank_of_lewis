@@ -22,10 +22,17 @@ public class Atm {
     private Integer note50;
 
     public int calculateTotalCash() {
-
         int totalIn20s = note20 * 20;
         int totalIn50s = note50 * 50;
 
         return totalIn20s + totalIn50s;
+    }
+
+    public int totalInNote20() {
+        return note20 * 20;
+    }
+
+    public int totalInNote50() {
+        return note50 * 50;
     }
 }
