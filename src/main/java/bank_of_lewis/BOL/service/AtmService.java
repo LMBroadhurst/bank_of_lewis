@@ -1,6 +1,7 @@
 package bank_of_lewis.BOL.service;
 
 import bank_of_lewis.BOL.model.Atm;
+import bank_of_lewis.BOL.model.CashToAdd;
 import bank_of_lewis.BOL.repo.AtmRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -125,4 +126,16 @@ public class AtmService {
         return output;
     }
 
+    public String addNotes(Long id, CashToAdd cashToAdd) {
+        Atm atm = atmRepo.getById(id);
+        int note20sToAdd = cashToAdd.getNote20s();
+        int note50sToAdd = cashToAdd.getNote50s();
+
+        atm.setNote20(atm.getNote20() + note20sToAdd);
+        atm.setNote50(atm.getNote50() + note50sToAdd);
+
+        atmRepo.save(atm);
+
+        return atm.getNote20().toString() + " " + atm.getNote50().toString();
+    }
 }
