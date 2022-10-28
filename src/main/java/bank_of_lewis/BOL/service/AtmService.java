@@ -187,8 +187,7 @@ public class AtmService {
             int note20sRemainingInAtm = atm.getNote20() - note20sToDispense;
             atm.setNote20(note20sRemainingInAtm);
             atmRepo.save(atm);
-            below10notesNotification(atm);
-            zeroNote20sNote50sAvailable(atm);
+            zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
             return note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed. 4";
@@ -211,8 +210,7 @@ public class AtmService {
             int note50sRemainingInAtm = atm.getNote50() - note50sToDispense;
             atm.setNote50(note50sRemainingInAtm);
             atmRepo.save(atm);
-            below10notesNotification(atm);
-            zeroNote20sNote50sAvailable(atm);
+            zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
             return "0 $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 1";
@@ -240,8 +238,7 @@ public class AtmService {
             atm.setNote20(note20sRemainingInAtm);
             atm.setNote50(note50sRemainingInAtm);
             atmRepo.save(atm);
-            below10notesNotification(atm);
-            zeroNote20sNote50sAvailable(atm);
+            zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
             return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 2";
@@ -269,8 +266,7 @@ public class AtmService {
             atm.setNote20(note20sRemainingInAtm);
             atm.setNote50(note50sRemainingInAtm);
             atmRepo.save(atm);
-            below10notesNotification(atm);
-            zeroNote20sNote50sAvailable(atm);
+            zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
             return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 3";
@@ -290,8 +286,7 @@ public class AtmService {
             atm.setNote50(note50sRemainingInAtm);
             atm.setNote20(note20sRemainingInAtm);
             atmRepo.save(atm);
-            below10notesNotification(atm);
-            zeroNote20sNote50sAvailable(atm);
+            zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
             return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 6";
@@ -314,47 +309,25 @@ public class AtmService {
         return note50sToDispense;
     }
 
-    public void below10notesNotification(Atm atm) {
-        String note20note50message = "";
-        Boolean lowOnNotes = false;
-        if (atm.getNote20() < 10 & atm.getNote50() < 10) {
-            note20note50message = "20s and 50s.";
-            lowOnNotes = true;
+    public void zeroOrLowNotesNotifications(Atm atm) {
+        String note20message = atm.getName() + " - " + atm.getLocation() + " has a healthy amount of $20 notes.";
+        String note50message = atm.getName() + " - " + atm.getLocation() + " has a healthy amount of $50 notes.";
+
+        if (atm.getNote50() == 0) {
+            note50message = atm.getName() + " - " + atm.getLocation() + " has ran out of $50 notes.";
         }
         else if (atm.getNote50() < 10) {
-            note20note50message = "50s.";
-            lowOnNotes = true;
+            note50message = atm.getName() + " - " + atm.getLocation() + " has less than 10 $50 notes.";
+        }
+
+        if (atm.getNote20() == 0) {
+            note20message = atm.getName() + " - " + atm.getLocation() + " has ran out of $20 notes.";
         }
         else if (atm.getNote20() < 10) {
-            note20note50message = "20s.";
-            lowOnNotes = true;
+            note20message = atm.getName() + " - " + atm.getLocation() + " has less than 10 $20 notes.";
         }
 
-        if (lowOnNotes.equals(true)) {
-            System.out.println(atm.getName() + ": " + atm.getLocation() + "... is running low on " + note20note50message);
-        }
-    }
-
-    public void zeroNote20sNote50sAvailable(Atm atm) {
-        String note20note50message = "";
-        Boolean zeroNote20sOr50s = false;
-
-        if (atm.getNote20().equals(0) && atm.getNote50().equals(0)) {
-            zeroNote20sOr50s = true;
-            note20note50message = "has 0 20 notes and 0 50 notes.";
-        }
-        else if (atm.getNote50().equals(0)) {
-            zeroNote20sOr50s = true;
-            note20note50message = "has 0 50 notes.";
-        }
-        else if (atm.getNote20().equals(0)) {
-            zeroNote20sOr50s = true;
-            note20note50message = "has 0 20 notes.";
-        }
-
-        if (zeroNote20sOr50s.equals(true)) {
-            System.out.println(atm.getName() + ": " + atm.getLocation() + "... " + note20note50message);
-        }
+        System.out.println(note20message + "\n" + note50message);
     }
 
 
