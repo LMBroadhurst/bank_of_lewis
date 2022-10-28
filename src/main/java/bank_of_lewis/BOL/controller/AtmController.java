@@ -2,6 +2,7 @@ package bank_of_lewis.BOL.controller;
 
 import bank_of_lewis.BOL.model.Atm;
 import bank_of_lewis.BOL.model.CashToAdd;
+import bank_of_lewis.BOL.model.Response;
 import bank_of_lewis.BOL.service.AtmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AtmController {
     private final AtmService atmService;
 
     @PostMapping("/createAtm")
-    public ResponseEntity<Atm> createAtm (@RequestBody Atm atm) {
+    public ResponseEntity<Response> createAtm (@RequestBody Atm atm) {
         return atmService.addNewATM(atm);
     }
 
@@ -42,8 +43,8 @@ public class AtmController {
     }
 
     @PutMapping("/withdrawCash/{id}/{cashRequired}")
-    public String withdrawCash(@RequestParam Long id, @RequestParam int cashRequired) {
-        return atmService.dispenseNotes(id, cashRequired);
+    public String withdrawCash(@RequestParam Long id, @RequestParam int cashRequired, @RequestParam Boolean prefers20s) {
+        return atmService.dispenseNotes(id, cashRequired, prefers20s);
     }
 
     @PutMapping("addCash/{id}/{cashToAdd}")
