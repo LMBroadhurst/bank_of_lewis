@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Map.of;
+import static org.springframework.http.HttpStatus.*;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -22,28 +26,27 @@ public class AtmService {
 
     private final AtmRepo atmRepo;
 
-    public ResponseEntity<Response> addNewATM(Atm atm) {
+    public ResponseEntity<Atm> addNewATM(Atm atm) {
+        atmRepo.save(atm);
 
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(LocalDateTime.now())
-                        .data(Map.of("Created ATM data", atmRepo.save(atm)))
-                        .message("ATM " + atm.getName() + "/" + atm.getLocation() + " created.")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build()
-        );
+        return ResponseEntity.status(OK)
+                .header("Message", "Successfully created ATM." )
+                .body(atm);
     }
 
     public ResponseEntity<List<Atm>> getAllAtms() {
-        return new ResponseEntity<>(atmRepo.findAll(), HttpStatus.OK);
+
+        return ResponseEntity.status(OK)
+                .header("Message", "Returns a list of ATMs")
+                .body(atmRepo.findAll());
     }
 
     public ResponseEntity<String> generateAtmReport(Long id) {
         Optional<Atm> atmOptional = atmRepo.findById(id);
-
         if (atmOptional.isEmpty()) {
-            return new ResponseEntity<>("Specified ATM could not be found.", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(BAD_REQUEST)
+                    .header("Message", "Could not find ATM with the specified ID.")
+                    .body("Could not find ATM with ID " + id);
         }
 
         Atm atm = atmOptional.get();
@@ -51,23 +54,52 @@ public class AtmService {
         String note50s = String.valueOf(atm.getNote50());
         String returnStatement = "$20 notes: " + note20s + ". $50 notes: " + note50s + ". Total cash holding: $" + atm.calculateTotalCash();
 
-        return new ResponseEntity<>(returnStatement, HttpStatus.OK);
+        return ResponseEntity.status(OK)
+                .header("Message", "Successfully generated ATM report.")
+                .body(returnStatement);
     }
 
-    public ResponseEntity<Atm> deleteAtm(Long id) {
-        Atm deletedAtm = atmRepo.getById(id);
-        atmRepo.delete(deletedAtm);
-        return new ResponseEntity<>(deletedAtm, HttpStatus.OK);
+    public ResponseEntity<String> deleteAtm(Long id) {
+        Optional<Atm> atmOptional = atmRepo.findById(id);
+        if (atmOptional.isEmpty()) {
+            return ResponseEntity.status(BAD_REQUEST)
+                    .header("Message", "Could not find ATM with the specified ID.")
+                    .body("Could not find ATM with the specified ID.");
+        }
+
+        Atm atm = atmOptional.get();
+        atmRepo.delete(atm);
+
+        return ResponseEntity.status(OK)
+                .header("Message", "Could not find ATM with the specified ID.")
+                .body("Deleted the " + atm.getName() + ": " + atm.getLocation() + " atm.");
     }
 
-    public ResponseEntity<Atm> editAtm(Long id, Atm atm) {
-        Atm editedAtm = atmRepo.getById(id);
+    public ResponseEntity<String> editAtm(Long id, Atm atm) {
+        Optional<Atm> atmOptional = atmRepo.findById(id);
+        if (atmOptional.isEmpty()) {
+            return ResponseEntity.status(BAD_REQUEST)
+                    .header("Message", "Could not find ATM with the specified ID.")
+                    .body("Could not find ATM with the specified ID.");
+        }
+
+        atm.setId(id);
         atmRepo.save(atm);
-        return new ResponseEntity<>(editedAtm, HttpStatus.OK);
+
+        return ResponseEntity.status(OK)
+                .header("Message", "Successfully edited ATM.")
+                .body(atm.getLocation() + ", " + atm.getName() + ", 50 Notes: " + atm.getNote50() + ", 20 Notes: " + atm.getNote20());
     }
 
-    public String addNotes(Long id, CashToAdd cashToAdd) {
-        Atm atm = atmRepo.getById(id);
+    public ResponseEntity<String> addNotes(Long id, CashToAdd cashToAdd) {
+        Optional<Atm> atmOptional = atmRepo.findById(id);
+        if (atmOptional.isEmpty()) {
+            return ResponseEntity.status(BAD_REQUEST)
+                    .header("Message", "Could not find ATM with the specified ID.")
+                    .body("Could not find ATM with the specified ID.");
+        }
+
+        Atm atm = atmOptional.get();
         int note20sToAdd = cashToAdd.getNote20s();
         int note50sToAdd = cashToAdd.getNote50s();
 
@@ -75,46 +107,71 @@ public class AtmService {
         atm.setNote50(atm.getNote50() + note50sToAdd);
         atmRepo.save(atm);
 
-        return atm.getNote20().toString() + " " + atm.getNote50().toString();
+        return ResponseEntity.status(OK)
+                .header("Message", "Could not find ATM with the specified ID.")
+                .body(atm.getNote20().toString() + " 20 notes added. " + atm.getNote50().toString() + " 50 notes added.");
     }
 
-    public String dispenseNotes (Long id, int cashRequired, Boolean prefers20) {
-        try {
-            Atm atm = atmRepo.getById(id);
-
-            if (prefers20) {
-                String handlePrefers20s = attemptMultiple20sDispense(cashRequired, atm);
-                if (!handlePrefers20s.equals("No match")) {
-                    return handlePrefers20s;
-                }
-            }
-
-            String handle1 = attemptMultiple50sDispense(cashRequired, atm);
-            if (!handle1.equals("No match")) {
-                return handle1;
-            }
-
-            String handle2 = attempt20s50sCombination(cashRequired, atm);
-            if (!handle2.equals("No match")) {
-                return handle2;
-            }
-
-            String handle3 = attempt20s50sComboMinus50(cashRequired, atm);
-            if (!handle3.equals("No match")) {
-                return handle3;
-            }
-
-            String handle4 = attemptMultiple20sDispense(cashRequired, atm);
-            if (!handle4.equals("No match")) {
-                return handle4;
-            }
-
-            return "Cannot dispense this value. Please try another. 5.";
-
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            return "There has been an error with the ATM choice or input value. Ensure you have entered a valid integer and ATM ID.";
+    public ResponseEntity<String> dispenseNotes (Long id, int cashRequired, Boolean prefers20) {
+        Optional<Atm> atmOptional = atmRepo.findById(id);
+        if (atmOptional.isEmpty()) {
+            return ResponseEntity.status(BAD_REQUEST)
+                    .header("Message", "Could not find ATM with the specified ID.")
+                    .body("Could not find ATM with the specified ID.");
         }
+
+        Atm atm = atmOptional.get();
+        if (atm.getNote50() < 5) {
+            prefers20 = true;
+        }
+
+        if (prefers20) {
+            String handlePrefers20s = attemptMaximiseNote20sWith50(cashRequired, atm);
+            if (!handlePrefers20s.equals("No match")) {
+                return ResponseEntity.status(OK)
+                        .header("Message", "Dispensed notes successfully.")
+                        .body(handlePrefers20s);
+            }
+
+            String handlePrefers20sWith50 = attemptMultiple20sDispense(cashRequired, atm);
+            if (!handlePrefers20sWith50.equals("No match")) {
+                return ResponseEntity.status(OK)
+                        .header("Message", "Dispensed notes successfully.")
+                        .body(handlePrefers20sWith50);
+            }
+        }
+
+        String handleAttemptMultiple50sDispense = attemptMultiple50sDispense(cashRequired, atm);
+        if (!handleAttemptMultiple50sDispense.equals("No match")) {
+            return ResponseEntity.status(OK)
+                    .header("Message", "Dispensed notes successfully.")
+                    .body(handleAttemptMultiple50sDispense);
+        }
+
+        String handleAttempt20s50sCombination = attempt20s50sCombination(cashRequired, atm);
+        if (!handleAttempt20s50sCombination.equals("No match")) {
+            return ResponseEntity.status(OK)
+                    .header("Message", "Dispensed notes successfully.")
+                    .body(handleAttempt20s50sCombination);
+        }
+
+        String handleAttempt20s50sComboMinus50 = attempt20s50sComboMinus50(cashRequired, atm);
+        if (!handleAttempt20s50sComboMinus50.equals("No match")) {
+            return ResponseEntity.status(OK)
+                    .header("Message", "Dispensed notes successfully.")
+                    .body(handleAttempt20s50sComboMinus50);
+        }
+
+        String handleAttemptMultiple20sDispense = attemptMultiple20sDispense(cashRequired, atm);
+        if (!handleAttemptMultiple20sDispense.equals("No match")) {
+            return ResponseEntity.status(OK)
+                    .header("Message", "Dispensed notes successfully.")
+                    .body(handleAttemptMultiple20sDispense);
+        }
+
+        return ResponseEntity.status(BAD_REQUEST)
+                .header("Message", "Cannot dispense the value specified.")
+                .body("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
     }
 
     public String attemptMultiple20sDispense(int cashRequired, Atm atm) {
@@ -223,11 +280,27 @@ public class AtmService {
         return "No match";
     }
 
-    public Boolean checkNoteAvailability(int numberOfNote20s, int numberOfNote50s, Atm atm) {
-        if (numberOfNote20s > atm.getNote20() || numberOfNote50s > atm.getNote50()) {
-            return false;
+    public String attemptMaximiseNote20sWith50(int cashRequired, Atm atm) {
+        int cashLeftToDispense = cashRequired - 50;
+        if (cashLeftToDispense % 20 == 0 && cashLeftToDispense > 0) {
+            int note50sToDispense = 1;
+            int note20sToDispense = cashLeftToDispense / 20;
+            int note50sRemainingInAtm = atm.getNote50() - note50sToDispense;
+            int note20sRemainingInAtm = atm.getNote20() - note20sToDispense;
+            atm.setNote50(note50sRemainingInAtm);
+            atm.setNote20(note20sRemainingInAtm);
+            atmRepo.save(atm);
+            below10notesNotification(atm);
+            zeroNote20sNote50sAvailable(atm);
+
+            System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
+            return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 6";
         }
-        return true;
+        return "No match";
+    }
+
+    public Boolean checkNoteAvailability(int numberOfNote20s, int numberOfNote50s, Atm atm) {
+        return numberOfNote20s <= atm.getNote20() && numberOfNote50s <= atm.getNote50();
     }
 
     public int calculateNote50sRequired(int cashRequired, Atm atm) {
@@ -283,5 +356,18 @@ public class AtmService {
             System.out.println(atm.getName() + ": " + atm.getLocation() + "... " + note20note50message);
         }
     }
+
+
+
+//    Tried to error check invalid atm inputs but fails before code can be reached
+//
+//    public Boolean atmInputValidityChecker(Atm atm) {
+//        Boolean checkNote50input = atm.getNote50() instanceof Integer;
+//        Boolean checkNote20input = atm.getNote20() instanceof Integer;
+//        Boolean checkLocationInput = atm.getLocation() instanceof String;
+//        Boolean checkNameInput = atm.getName() instanceof String;
+//
+//        return !checkNote50input.equals(false) && !checkNote20input.equals(false) && !checkLocationInput.equals(false) && !checkNameInput.equals(false);
+//    }
 
 }

@@ -2,7 +2,6 @@ package bank_of_lewis.BOL.controller;
 
 import bank_of_lewis.BOL.model.Atm;
 import bank_of_lewis.BOL.model.CashToAdd;
-import bank_of_lewis.BOL.model.Response;
 import bank_of_lewis.BOL.service.AtmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ public class AtmController {
     private final AtmService atmService;
 
     @PostMapping("/createAtm")
-    public ResponseEntity<Response> createAtm (@RequestBody Atm atm) {
+    public ResponseEntity<Atm> createAtm (@RequestBody Atm atm) {
         return atmService.addNewATM(atm);
     }
 
@@ -33,22 +32,22 @@ public class AtmController {
     }
 
     @DeleteMapping("/deleteAtm/{id}")
-    public ResponseEntity<Atm> deleteAtm(@RequestParam Long id) {
+    public ResponseEntity<String> deleteAtm(@RequestParam Long id) {
         return atmService.deleteAtm(id);
     }
 
     @PutMapping("/editAtm/{id}")
-    public ResponseEntity<Atm> editAtm(@RequestParam Long id, @RequestBody Atm atm) {
+    public ResponseEntity<String> editAtm(@RequestParam Long id, @RequestBody Atm atm) {
         return atmService.editAtm(id, atm);
     }
 
     @PutMapping("/withdrawCash/{id}/{cashRequired}")
-    public String withdrawCash(@RequestParam Long id, @RequestParam int cashRequired, @RequestParam Boolean prefers20s) {
+    public ResponseEntity<String> withdrawCash(@RequestParam Long id, @RequestParam int cashRequired, @RequestParam Boolean prefers20s) {
         return atmService.dispenseNotes(id, cashRequired, prefers20s);
     }
 
     @PutMapping("addCash/{id}/{cashToAdd}")
-    public String addCash(@RequestParam Long id, @RequestBody CashToAdd cashToAdd) {
+    public ResponseEntity<String> addCash(@RequestParam Long id, @RequestBody CashToAdd cashToAdd) {
         return atmService.addNotes(id, cashToAdd);
     }
 
