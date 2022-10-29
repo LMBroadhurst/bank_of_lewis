@@ -22,7 +22,7 @@ public class AtmController {
     }
 
     @GetMapping("/generateAtmReport/{id}")
-    public ResponseEntity<String> generateAtmReport(@RequestParam Long id) {
+    public ResponseEntity<String> generateAtmReport(@PathVariable Long id) {
         return atmService.generateAtmReport(id);
     }
 
@@ -32,22 +32,22 @@ public class AtmController {
     }
 
     @DeleteMapping("/deleteAtm/{id}")
-    public ResponseEntity<String> deleteAtm(@RequestParam Long id) {
+    public ResponseEntity<String> deleteAtm(@PathVariable Long id) {
         return atmService.deleteAtm(id);
     }
 
     @PutMapping("/editAtm/{id}")
-    public ResponseEntity<String> editAtm(@RequestParam Long id, @RequestBody Atm atm) {
+    public ResponseEntity<String> editAtm(@PathVariable Long id, @RequestBody Atm atm) {
         return atmService.editAtm(id, atm);
     }
 
-    @PutMapping("/withdrawCash/{id}/{cashRequired}")
-    public ResponseEntity<String> withdrawCash(@RequestParam Long id, @RequestParam int cashRequired, @RequestParam Boolean prefers20s) {
+    @PutMapping("/withdrawCash/{id}/{cashRequired}/{prefers20s}")
+    public ResponseEntity<String> withdrawCash(@PathVariable Long id, @PathVariable int cashRequired, @PathVariable Boolean prefers20s) {
         return atmService.dispenseNotes(id, cashRequired, prefers20s);
     }
 
-    @PutMapping("addCash/{id}/{cashToAdd}")
-    public ResponseEntity<String> addCash(@RequestParam Long id, @RequestBody CashToAdd cashToAdd) {
+    @PutMapping("addCash/{id}")
+    public ResponseEntity<String> addCash(@PathVariable Long id, @RequestBody CashToAdd cashToAdd) {
         return atmService.addNotes(id, cashToAdd);
     }
 
