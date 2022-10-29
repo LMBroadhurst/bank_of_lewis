@@ -351,4 +351,203 @@ class AtmServiceTest {
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
+    @Test
+    @DisplayName("Testing ATM service layer, successful dispenseNotes from ATM, mix of 50s 20s")
+    public void mixOf50s20s__dispenseNotesFromAtmTest__serviceTest() {
+        Atm atm = new Atm(4L, "Accept prefers20 parameter", "London, Oxford Circus", 100, 100);
+        given(atmRepo.findById(atm.getId())).willReturn(Optional.of(atm));
+        int cashRequired = 190;
+        Boolean prefers20 = false;
+
+        ResponseEntity<String> atmResponse = atmService.dispenseNotes(atm.getId(), cashRequired, prefers20);
+        String atmResponseBody = atmResponse.getBody();
+        HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
+        int note50sToDispense = 3;
+        int note20sToDispense = 2;
+
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 2");
+        assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("Testing ATM service layer, successful dispenseNotes from ATM, mix of 50s 20s, not enough 50s")
+    public void mixOf50s20sNotEnough50s__dispenseNotesFromAtmTest__serviceTest() {
+        Atm atm = new Atm(4L, "Accept prefers20 parameter", "London, Oxford Circus", 100, 1);
+        given(atmRepo.findById(atm.getId())).willReturn(Optional.of(atm));
+        int cashRequired = 190;
+        Boolean prefers20 = false;
+
+        ResponseEntity<String> atmResponse = atmService.dispenseNotes(atm.getId(), cashRequired, prefers20);
+        String atmResponseBody = atmResponse.getBody();
+        HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
+        int note50sToDispense = 1;
+        int note20sToDispense = (cashRequired - 50) / 20;
+
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 6");
+        assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("Testing ATM service layer, successful dispenseNotes from ATM, mix of 50s 20s, not enough 20s")
+    public void mixOf50s20sNotEnough20s__dispenseNotesFromAtmTest__serviceTest() {
+        Atm atm = new Atm(4L, "Accept prefers20 parameter", "London, Oxford Circus", 0, 100);
+        given(atmRepo.findById(atm.getId())).willReturn(Optional.of(atm));
+        int cashRequired = 220;
+        Boolean prefers20 = false;
+
+        ResponseEntity<String> atmResponse = atmService.dispenseNotes(atm.getId(), cashRequired, prefers20);
+        String atmResponseBody = atmResponse.getBody();
+        HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
+
+        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (220). Please try another. 5.");
+        assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("successful dispenseNotes from ATM, mix of 50s 20s, minus 50 for success")
+    public void mixOf50s20sMinus50ForSuccess__dispenseNotesFromAtmTest__serviceTest() {
+        Atm atm = new Atm(4L, "Test", "London, Oxford Circus", 100, 100);
+        given(atmRepo.findById(atm.getId())).willReturn(Optional.of(atm));
+        int cashRequired = 110;
+        Boolean prefers20 = false;
+
+        ResponseEntity<String> atmResponse = atmService.dispenseNotes(atm.getId(), cashRequired, prefers20);
+        String atmResponseBody = atmResponse.getBody();
+        HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
+        int note50sToDispense = 1;
+        int note20sToDispense = 3;
+
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 3");
+        assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("successful dispenseNotes from ATM, cashRequired % 20")
+    public void cashRequiredMod20__dispenseNotesFromAtmTest__serviceTest() {
+        Atm atm = new Atm(4L, "Test", "London, Oxford Circus", 100, 100);
+        given(atmRepo.findById(atm.getId())).willReturn(Optional.of(atm));
+        int cashRequired = 40;
+        Boolean prefers20 = false;
+
+        ResponseEntity<String> atmResponse = atmService.dispenseNotes(atm.getId(), cashRequired, prefers20);
+        String atmResponseBody = atmResponse.getBody();
+        HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
+        int note20sToDispense = 2;
+
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed. 4");
+        assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("successful dispenseNotes from ATM, cashRequired % 20, not enough 20s")
+    public void cashRequiredMod20NotEnough20s__dispenseNotesFromAtmTest__serviceTest() {
+        Atm atm = new Atm(4L, "Test", "London, Oxford Circus", 0, 100);
+        given(atmRepo.findById(atm.getId())).willReturn(Optional.of(atm));
+        int cashRequired = 40;
+        Boolean prefers20 = false;
+
+        ResponseEntity<String> atmResponse = atmService.dispenseNotes(atm.getId(), cashRequired, prefers20);
+        String atmResponseBody = atmResponse.getBody();
+        HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
+
+        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
+        assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("successfully check note availability, false, not enough 20s")
+    public void checkNoteAvailability__returnFalseNotEnough20s__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 2, 5);
+        int note20sToDispense = 3;
+        int note50sToDispense = 5;
+
+        Boolean checkNoteAvailabilityResponse = atmService.checkNoteAvailability(note20sToDispense, note50sToDispense, atm);
+
+        assertThat(checkNoteAvailabilityResponse).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("successfully check note availability, false, not enough 50s")
+    public void checkNoteAvailability__returnFalseNotEnough50s__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 22, 5);
+        int note20sToDispense = 1;
+        int note50sToDispense = 6;
+
+        Boolean checkNoteAvailabilityResponse = atmService.checkNoteAvailability(note20sToDispense, note50sToDispense, atm);
+
+        assertThat(checkNoteAvailabilityResponse).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("successfully check note availability, false, not enough 20s or 50s")
+    public void checkNoteAvailability__returnFalseNotEnough20sOr50s__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 1, 2);
+        int note20sToDispense = 2;
+        int note50sToDispense = 3;
+
+        Boolean checkNoteAvailabilityResponse = atmService.checkNoteAvailability(note20sToDispense, note50sToDispense, atm);
+
+        assertThat(checkNoteAvailabilityResponse).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("successfully check note availability, enough 20s and 50s available")
+    public void checkNoteAvailability__returnTrue__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 100, 20);
+        int note20sToDispense = 1;
+        int note50sToDispense = 5;
+
+        Boolean checkNoteAvailabilityResponse = atmService.checkNoteAvailability(note20sToDispense, note50sToDispense, atm);
+
+        assertThat(checkNoteAvailabilityResponse).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("successfully calculate note50s required, more 50s in ATM than required")
+    public void calculateNote50sRequired__moreInAtmThanRequired__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 10, 10);
+        int cashRequired = 170;
+        int numberOf50sRequired = 3;
+
+        int calculateNote50sRequiredResponse = atmService.calculateNote50sRequired(cashRequired, atm);
+
+        assertThat(calculateNote50sRequiredResponse).isEqualTo(numberOf50sRequired);
+    }
+
+    @Test
+    @DisplayName("successfully calculate note50s required, LESS 50s in ATM than required")
+    public void calculateNote50sRequired__lessInAtmThanRequired__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 100, 1);
+        int cashRequired = 250;
+        int numberOf50sRequired = 1;
+
+        int calculateNote50sRequiredResponse = atmService.calculateNote50sRequired(cashRequired, atm);
+
+        assertThat(calculateNote50sRequiredResponse).isEqualTo(numberOf50sRequired);
+    }
+
+    @Test
+    @DisplayName("successfully calculate note50s required, cashRequired = 0")
+    public void calculateNote50sRequired__cashRequiredEquals0__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 100, 1);
+        int cashRequired = 0;
+        int numberOf50sRequired = 0;
+
+        int calculateNote50sRequiredResponse = atmService.calculateNote50sRequired(cashRequired, atm);
+
+        assertThat(calculateNote50sRequiredResponse).isEqualTo(numberOf50sRequired);
+    }
+
+    @Test
+    @DisplayName("successfully calculate note50s required, cashRequired = -50")
+    public void calculateNote50sRequired__cashRequiredEqualsMinus50__test() {
+        Atm atm = new Atm(1L, "Test", "Test Road", 100, 1);
+        int cashRequired = -50;
+        int numberOf50sRequired = 0;
+
+        int calculateNote50sRequiredResponse = atmService.calculateNote50sRequired(cashRequired, atm);
+
+        assertThat(calculateNote50sRequiredResponse).isEqualTo(numberOf50sRequired);
+    }
+
 }

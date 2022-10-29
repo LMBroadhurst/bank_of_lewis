@@ -307,11 +307,13 @@ public class AtmService {
 
     public int calculateNote50sRequired(int cashRequired, Atm atm) {
         int note50sToDispense = Math.floorDiv(cashRequired, 50);
-        System.out.println(note50sToDispense);
+
         if (note50sToDispense > atm.getNote50()) {
             note50sToDispense = atm.getNote50();
         }
-        System.out.println(note50sToDispense);
+        if (note50sToDispense < 0) {
+            return 0;
+        }
 
         return note50sToDispense;
     }
