@@ -30,11 +30,4 @@ public class Atm {
         return totalIn20s + totalIn50s;
     }
 
-    public int totalInNote20() {
-        return note20 * 20;
-    }
-
-    public int totalInNote50() {
-        return note50 * 50;
-    }
 }
