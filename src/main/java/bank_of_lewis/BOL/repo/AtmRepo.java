@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface AtmRepo extends JpaRepository<Atm, Long> {
 
     Optional<Atm> findById(Long id);
-    Atm findByName(String name);
+    Optional<Atm> findByName(String name);
 
 }

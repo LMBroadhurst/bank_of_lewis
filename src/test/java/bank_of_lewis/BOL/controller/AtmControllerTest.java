@@ -22,4 +22,11 @@ class ATMControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/atm/getAllAtms"))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
     }
+
+    @Test
+    @DisplayName("Successful 2xx API call, delete Atm")
+    void deleteAtmTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/atm/getAllAtms"))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+    }
 }
