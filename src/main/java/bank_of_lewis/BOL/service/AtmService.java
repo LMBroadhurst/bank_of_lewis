@@ -125,6 +125,13 @@ public class AtmService {
             prefers20 = true;
         }
 
+        if (cashRequired < 20) {
+            return ResponseEntity.status(BAD_REQUEST)
+                    .header("Message", "Cannot dispense the value specified.")
+                    .body("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
+
+        }
+
         if (prefers20) {
             String handlePrefers20s = attemptMaximiseNote20sWith50(cashRequired, atm);
             if (!handlePrefers20s.equals("No match")) {
