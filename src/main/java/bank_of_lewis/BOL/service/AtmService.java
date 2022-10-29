@@ -310,8 +310,8 @@ public class AtmService {
     }
 
     public void zeroOrLowNotesNotifications(Atm atm) {
-        String note20message = atm.getName() + " - " + atm.getLocation() + " has a healthy amount of $20 notes.";
-        String note50message = atm.getName() + " - " + atm.getLocation() + " has a healthy amount of $50 notes.";
+        String note20message = null;
+        String note50message = null;
 
         if (atm.getNote50() == 0) {
             note50message = atm.getName() + " - " + atm.getLocation() + " has ran out of $50 notes.";
@@ -327,20 +327,12 @@ public class AtmService {
             note20message = atm.getName() + " - " + atm.getLocation() + " has less than 10 $20 notes.";
         }
 
-        System.out.println(note20message + "\n" + note50message);
+        if (note20message != null) {
+            System.out.println(note20message);
+        }
+        if (note50message != null) {
+            System.out.println(note50message);
+        }
     }
-
-
-
-//    Tried to error check invalid atm inputs but fails before code can be reached
-//
-//    public Boolean atmInputValidityChecker(Atm atm) {
-//        Boolean checkNote50input = atm.getNote50() instanceof Integer;
-//        Boolean checkNote20input = atm.getNote20() instanceof Integer;
-//        Boolean checkLocationInput = atm.getLocation() instanceof String;
-//        Boolean checkNameInput = atm.getName() instanceof String;
-//
-//        return !checkNote50input.equals(false) && !checkNote20input.equals(false) && !checkLocationInput.equals(false) && !checkNameInput.equals(false);
-//    }
 
 }
