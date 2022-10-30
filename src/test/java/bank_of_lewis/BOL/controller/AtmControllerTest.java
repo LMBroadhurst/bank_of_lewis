@@ -79,7 +79,8 @@ class ATMControllerTest {
                 .content(this.mapper.writeValueAsString(atmPostTest));
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
@@ -108,10 +109,10 @@ class ATMControllerTest {
     @Test
     @DisplayName("Successful 2xx API call, delete Atm")
     void deleteAtmByIdTest__success() throws Exception {
-        Mockito.when(atmRepo.findById(atm1.getId())).thenReturn(Optional.of(atm1));
+        Mockito.when(atmRepo.findById(atm3.getId())).thenReturn(Optional.of(atm3));
 
         mockMvc.perform(MockMvcRequestBuilders
-                .delete("/atm/deleteAtm/1")
+                .delete("/atm/deleteAtm/3")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -142,20 +143,12 @@ class ATMControllerTest {
     @Test
     @DisplayName("Successful 2xx API call, PUT ATM details")
     void withdrawCashFromAtmByIdTest__success() throws Exception {
-        Atm testAtm = Atm.builder()
-                .id(1L)
-                .name("PUT test")
-                .location("In the cloud")
-                .note20(100)
-                .note50(100)
-                .build();
-
-        Mockito.when(atmRepo.findById(atm1.getId())).thenReturn(Optional.of(atm1));
+        Mockito.when(atmRepo.findById(atm2.getId())).thenReturn(Optional.of(atm2));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/atm/withdrawCash/2/200/false")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(testAtm));
+                .content(this.mapper.writeValueAsString(atm2));
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
@@ -164,14 +157,6 @@ class ATMControllerTest {
     @Test
     @DisplayName("Successful 2xx API call, add cash to ATM")
     void addNotesToAtmByIdTest__success() throws Exception {
-        Atm updatedAtm = Atm.builder()
-                .id(1L)
-                .name("add cash test")
-                .location("In the cloud")
-                .note20(100)
-                .note50(100)
-                .build();
-
         CashToAdd cashToAdd = new CashToAdd(20, 20);
 
         Mockito.when(atmRepo.findById(atm1.getId())).thenReturn(Optional.of(atm1));

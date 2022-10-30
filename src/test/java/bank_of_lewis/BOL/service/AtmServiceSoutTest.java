@@ -38,7 +38,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, zero 20s only")
     public void zeroNotesNotification__zero20s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 0, 100);
 
@@ -49,7 +49,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, zero 50s only")
     public void zeroNotesNotification__zero50s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 100, 0);
 
@@ -60,7 +60,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, low 20s only")
     public void zeroNotesNotification__low20s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 5, 100);
 
@@ -71,7 +71,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, low 50s only")
     public void zeroNotesNotification__low50s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 100, 5);
 
@@ -82,7 +82,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, zero 20s & low 50s")
     public void zeroNotesNotification__Zero20slow50s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 0, 5);
 
@@ -94,7 +94,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, zero 20s & zero 50s")
     public void zeroNotesNotification__Zero20sZero50s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 0, 0);
 
@@ -106,7 +106,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, low 20s & low 50s")
     public void zeroNotesNotification__Low20sLow50s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 5, 5);
 
@@ -118,7 +118,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("successful SOUT, low 20s & zero 50s")
     public void zeroNotesNotification__Low20sZero50s__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 5, 0);
 
@@ -130,7 +130,7 @@ public class AtmServiceSoutTest {
     }
 
     @Test
-    @DisplayName("hi")
+    @DisplayName("no SOUT, 20s & 50s above threshold of 10")
     public void zeroNotesNotification__NoSout__test() {
         Atm atm = new Atm(1L, "SOUT test", "Java Land", 15, 20);
 

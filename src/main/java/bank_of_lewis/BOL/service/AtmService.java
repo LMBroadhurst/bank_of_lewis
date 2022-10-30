@@ -27,11 +27,17 @@ public class AtmService {
     private final AtmRepo atmRepo;
 
     public ResponseEntity<Atm> addNewATM(Atm atm) {
-        atmRepo.save(atm);
+        Atm addedAtm = atmRepo.save(atm);
+
+//        Just to avoid return of incorrect atm details with e.g. id = 0, as id is auto generated
+        int atmRepoSize = atmRepo.findAll().size();
+        if (atm.getId() != atmRepoSize) {
+            addedAtm = atmRepo.findAll().get(atmRepoSize - 1);
+        }
 
         return ResponseEntity.status(OK)
                 .header("Message", "Successfully created ATM." )
-                .body(atm);
+                .body(addedAtm);
     }
 
     public ResponseEntity<List<Atm>> getAllAtms() {
