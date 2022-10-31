@@ -41,3 +41,9 @@ To make a request, click on 'Try it out' in the top right hand corner of the API
 
 Here we are going to attemp to withdraw $200 from the Mahi Test ATM by filling out the relevant fields and clicking execute.
 
+![Swagger 3](https://user-images.githubusercontent.com/95776633/199008328-d55d8547-28e7-45f2-a328-7b000ee17a5f.png)
+
+We get a 200 reponse code, and a response body stating "5 $20 notes dispensed. 2 $50 notes dispensed."
+
+All other requests follow the same process.
+
