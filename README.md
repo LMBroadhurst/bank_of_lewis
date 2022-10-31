@@ -1,5 +1,8 @@
 # Welcome to the Bank of Lewis
 
+To use this app, please download/git clone the repo onto your local PC and open in with your favourite IDE.
+It was built using Java 17, so please ensure your JDK is is compatible before running the app.
+
 ## Key Websites for App use
 
 After entering and running the BolApplication file on port 8080...
