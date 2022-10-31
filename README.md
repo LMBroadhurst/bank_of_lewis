@@ -56,3 +56,10 @@ We get a 200 reponse code, and a response body stating "5 $20 notes dispensed. 2
 
 All other requests follow the same process.
 
+## High level overview of App
+
+Before coding the app, I planned to create a Spring Boot application that interacted with a DB.
+
+After reading the spec required, I wrote an outline for a basic class diagram, seen below.
+
+![pre code](https://user-images.githubusercontent.com/95776633/199010137-11551097-33b8-43ac-9499-58d846383250.png)
