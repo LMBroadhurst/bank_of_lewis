@@ -350,4 +350,14 @@ public class AtmService {
         }
     }
 
+//    Added last minute to quickly clear the DB
+    public ResponseEntity<String> deleteAllAtms() {
+        if (atmRepo.findAll().size() > 0) {
+            atmRepo.deleteAll();
+            return ResponseEntity.status(OK).body("Successfully deleted all ATMs");
+        }
+
+        return ResponseEntity.status(BAD_REQUEST).body("No ATMs in system to delete");
+    }
+
 }

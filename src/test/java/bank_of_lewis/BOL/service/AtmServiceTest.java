@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 import org.springframework.http.HttpStatus;
@@ -552,5 +554,4 @@ class AtmServiceTest {
 
         assertThat(calculateNote50sRequiredResponse).isEqualTo(numberOf50sRequired);
     }
-
 }

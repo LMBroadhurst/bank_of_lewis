@@ -170,4 +170,31 @@ class ATMControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("Successful 2xx API call, delete all ATMs from repo")
+    void deleteAtmsFromRepo__success() throws Exception {
+        Mockito.when(atmRepo.findAll()).thenReturn(Arrays.asList(atm1, atm2, atm3));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/atm/deleteAllAtms")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Failed 404 API call, delete all ATMs from repo, no ATMs")
+    void deleteAtmsFromRepo__noAtms__200withErrorHandling() throws Exception {
+//        Delete all ATMs
+        atmRepo.deleteAll();
+
+//        Check they are deleted
+        Mockito.when(atmRepo.findAll()).thenReturn(Arrays.asList());
+
+//        Run the API call
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/atm/deleteAllAtms")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk());
+    }
+
 }

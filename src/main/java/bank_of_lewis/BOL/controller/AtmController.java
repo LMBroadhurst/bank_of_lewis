@@ -46,9 +46,15 @@ public class AtmController {
         return atmService.dispenseNotes(id, cashRequired, prefers20s);
     }
 
-    @PutMapping("addCash/{id}")
+    @PutMapping("/addCash/{id}")
     public ResponseEntity<String> addCash(@PathVariable Long id, @RequestBody CashToAdd cashToAdd) {
         return atmService.addNotes(id, cashToAdd);
     }
 
+
+//    Added last minute to quickly clear the DB
+    @DeleteMapping("/deleteAllAtms")
+    public ResponseEntity<String> deleteAllAtms() {
+        return atmService.deleteAllAtms();
+    }
 }
