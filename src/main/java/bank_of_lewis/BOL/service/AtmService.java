@@ -128,7 +128,7 @@ public class AtmService {
         if (cashRequired < 20) {
             return ResponseEntity.status(BAD_REQUEST)
                     .header("Message", "Cannot dispense the value specified.")
-                    .body("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
+                    .body("Cannot dispense this value (" + cashRequired + "). Please try another.");
 
         }
 
@@ -178,7 +178,7 @@ public class AtmService {
 
         return ResponseEntity.status(BAD_REQUEST)
                 .header("Message", "Cannot dispense the value specified.")
-                .body("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
+                .body("Cannot dispense this value (" + cashRequired + "). Please try another.");
     }
 
     public String attemptMultiple20sDispense(int cashRequired, Atm atm) {
@@ -187,7 +187,6 @@ public class AtmService {
 
             Boolean handleCheckNoteAvailability = checkNoteAvailability(note20sToDispense, 0, atm);
             if (!handleCheckNoteAvailability) {
-                System.out.println("NM4");
                 return "No match";
             }
 
@@ -197,10 +196,9 @@ public class AtmService {
             zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
-            return note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed. 4";
+            return note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed.";
         }
 
-        System.out.println("NM4");
         return "No match";
     }
 
@@ -210,7 +208,6 @@ public class AtmService {
 
             Boolean handleCheckNoteAvailability = checkNoteAvailability(0, note50sToDispense, atm);
             if (!handleCheckNoteAvailability) {
-                System.out.println("NM1");
                 return "No match";
             }
 
@@ -220,10 +217,9 @@ public class AtmService {
             zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
-            return "0 $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 1";
+            return "0 $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.";
         }
 
-        System.out.println("NM1");
         return "No match";
     }
 
@@ -236,7 +232,6 @@ public class AtmService {
 
             Boolean handleCheckNoteAvailability = checkNoteAvailability(note20sToDispense, note50sToDispense, atm);
             if (!handleCheckNoteAvailability) {
-                System.out.println("NM2");
                 return "No match";
             }
 
@@ -248,10 +243,9 @@ public class AtmService {
             zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
-            return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 2";
+            return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.";
         }
 
-        System.out.println("NM2");
         return "No match";
     }
 
@@ -264,7 +258,6 @@ public class AtmService {
 
             Boolean handleCheckNoteAvailability = checkNoteAvailability(note20sToDispense, note50sToDispense, atm);
             if (!handleCheckNoteAvailability) {
-                System.out.println("NM3");
                 return "No match";
             }
 
@@ -276,10 +269,9 @@ public class AtmService {
             zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
-            return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 3";
+            return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.";
         }
 
-        System.out.println("NM3");
         return "No match";
     }
 
@@ -296,8 +288,9 @@ public class AtmService {
             zeroOrLowNotesNotifications(atm);
 
             System.out.println(atm.getNote20().toString() + " - " + atm.getNote50().toString());
-            return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 6";
+            return note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.";
         }
+
         return "No match";
     }
 
