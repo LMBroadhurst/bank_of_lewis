@@ -238,7 +238,7 @@ class AtmServiceTest {
         String atmResponseBody = atmResponse.getBody();
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
 
-        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
+        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (" + cashRequired + "). Please try another.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -254,7 +254,7 @@ class AtmServiceTest {
         String atmResponseBody = atmResponse.getBody();
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
 
-        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
+        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (" + cashRequired + "). Please try another.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -271,7 +271,7 @@ class AtmServiceTest {
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
         int note20sToDispense = 5;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed. 4");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -288,7 +288,7 @@ class AtmServiceTest {
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
         int note20sToDispense = 7;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed. 4");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -306,7 +306,7 @@ class AtmServiceTest {
         int note50sToDispense = 1;
         int note20sToDispense = (cashRequired - 50) / 20;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 6");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -323,7 +323,7 @@ class AtmServiceTest {
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
         int note50sToDispense = cashRequired / 50;
 
-        assertThat(atmResponseBody).isEqualTo("0 $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 1");
+        assertThat(atmResponseBody).isEqualTo("0 $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -340,7 +340,7 @@ class AtmServiceTest {
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
         int note50sToDispense = 1250 / 50;
 
-        assertThat(atmResponseBody).isEqualTo("0 $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 1");
+        assertThat(atmResponseBody).isEqualTo("0 $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -358,7 +358,7 @@ class AtmServiceTest {
         int note50sToDispense = 1;
         int note20sToDispense = (cashRequired - 50) / 20;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 6");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -376,7 +376,7 @@ class AtmServiceTest {
         int note50sToDispense = 3;
         int note20sToDispense = 2;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 2");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -394,7 +394,7 @@ class AtmServiceTest {
         int note50sToDispense = 1;
         int note20sToDispense = (cashRequired - 50) / 20;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 6");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -410,7 +410,7 @@ class AtmServiceTest {
         String atmResponseBody = atmResponse.getBody();
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
 
-        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (220). Please try another. 5.");
+        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (220). Please try another.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -427,7 +427,7 @@ class AtmServiceTest {
         int note50sToDispense = 1;
         int note20sToDispense = 3;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed. 3");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed. " + note50sToDispense + " $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -443,7 +443,7 @@ class AtmServiceTest {
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
         int note20sToDispense = 2;
 
-        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed. 4");
+        assertThat(atmResponseBody).isEqualTo(note20sToDispense + " $20 notes dispensed." + " 0 $50 notes dispensed.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.OK);
     }
 
@@ -459,7 +459,7 @@ class AtmServiceTest {
         String atmResponseBody = atmResponse.getBody();
         HttpStatus atmResponseStatusCode = atmResponse.getStatusCode();
 
-        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (" + cashRequired + "). Please try another. 5.");
+        assertThat(atmResponseBody).isEqualTo("Cannot dispense this value (" + cashRequired + "). Please try another.");
         assertThat(atmResponseStatusCode).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 

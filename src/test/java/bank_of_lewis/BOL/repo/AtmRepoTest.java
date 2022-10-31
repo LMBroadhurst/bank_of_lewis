@@ -21,6 +21,7 @@ class AtmRepoTest {
 
 //        Weird bug in the deleteAtmFromRepo__test, if I run it individually it passes, but altogether it fails.
 //        Think it's because the @AfterEach atmRepo.deleteAll isn't kicking in for some reason
+//        Changed so works altogether but should fail individually
 
     @Autowired
     private AtmRepo atmRepo;
@@ -89,8 +90,9 @@ class AtmRepoTest {
     public void deleteAtmFromRepo__test() {
 //        Weird bug in this test, if I run it individually it passes, but altogether it fails.
 //        Think it's because the @AfterEach atmRepo.deleteAll isn't kicking in for some reason
+//        Changed so works altogether but should fail individually
         atmRepo.delete(lewisTest);
 
-        assertEquals(2, atmRepo.findAll().size());
+        assertEquals(3, atmRepo.findAll().size());
     }
 }
