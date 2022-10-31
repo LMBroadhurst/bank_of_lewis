@@ -63,3 +63,19 @@ Before coding the app, I planned to create a Spring Boot application that intera
 After reading the spec required, I wrote an outline for a basic class diagram, seen below.
 
 ![pre code](https://user-images.githubusercontent.com/95776633/199010137-11551097-33b8-43ac-9499-58d846383250.png)
+
+## App Features
+- ATMs have a supply of bank notes available.
+- ATM knows the amount of each note it holds.
+- ATM can report how many of each note it has, as well as it's total cash holding.
+- ATM can tell it has x $20 and y $50 notes from the POST createAtm method.
+- After initialisation, can only add or remove $20 and $50 notes.
+- Errors reported when asking for invalid cash withdrawals, e.g. $30.
+- Dispensing money removes the equivalent cash from the machine.
+- Failure to dispense cash will not reduce the cash in the machine.
+- ATM can dispense any valid match of $20s/$50s. As well as e.g. $200 when there are only 3x$50 notes and 8x$20 notes (see Mahi Test, ID 4 on given SQL).
+- Requests of e.g. $100, $120 can dispense the maximum number of $20s possible by specifying the prefers20s parameter as true when withdrawing cash.
+- The ATM will print a SOUT message when the number of a specific note in the ATM is below 10. It will also send a notification when the notes hit 0.
+- The DB storing the relevant ATM information is persistent. The information will remain in the DB after closing and re-opening the app.
+- Notes can be added to the machine number by using the addCash API request.
+- Service/Controller/Repo layer testing.
