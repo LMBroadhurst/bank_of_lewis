@@ -34,3 +34,10 @@ In the text box you may enter whatever SQL you like, for example 'SELECT NAME, L
 The landing page after following the swagger link should show a list of potential API calls, as seen below.
 
 ![Swagger 1](https://user-images.githubusercontent.com/95776633/199007316-dbdfe8ac-c4ea-4435-8bb3-7ed4f1a00122.png)
+
+To make a request, click on 'Try it out' in the top right hand corner of the API request, after clicking on the request.
+
+![Swagger 2](https://user-images.githubusercontent.com/95776633/199007655-4bf77a90-08fb-4985-a01e-c5753824a70a.png)
+
+Here we are going to attemp to withdraw $200 from the Mahi Test ATM by filling out the relevant fields and clicking execute.
+
