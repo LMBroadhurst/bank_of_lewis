@@ -105,4 +105,4 @@ A problem that would occur when working with different currencies is that they d
 - I’m not sure whether the algorithm I’m using for getting the best match of notes is the most optimal to use. As mentioned, I kept finding extra problems and scenarios that helped me to improve and reiterate more efficient ways to solve problems. I’m sure if I spent more time on it I would have a more efficient way of dispensing notes.
 - My code at the beginning didn’t follow SOLID principles correctly and it led to me losing a lot of time confused & refactoring code that should have been done properly from the start. E.g. I would have code checking whether there were enough notes in the ATM and matching the notes together in the same ‘block’. I should have broken the code/problem into much more modular pieces, like the end product (hopefully) is. Key point as it really highlighted how making the code readable for you and the wider team you are in is crucial.
 
-## Any feedback email me at lewis1broadhurst@gmail.com :)
+### Any feedback email me at lewis1broadhurst@gmail.com
