@@ -78,6 +78,7 @@ After reading the spec required, I wrote an outline for a basic class diagram, s
 - Failure to dispense cash will not reduce the cash in the machine.
 - ATM can dispense any valid match of $20s/$50s. As well as e.g. $200 when there are only 3x$50 notes and 8x$20 notes (see Mahi Test, ID 4 on given SQL).
 - Requests of e.g. $100, $120 can dispense the maximum number of $20s possible by specifying the prefers20s parameter as true when withdrawing cash.
+- The ATM will trigger prefers20s automatically and preferentially dispense $20 if the number of $50s in the ATM is below 5.
 - The ATM will print a SOUT message when the number of a specific note in the ATM is below 10. It will also send a notification when the notes hit 0.
 - The DB storing the relevant ATM information is persistent. The information will remain in the DB after closing and re-opening the app.
 - Notes can be added to the machine number by using the addCash API request.
