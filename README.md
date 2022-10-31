@@ -79,3 +79,16 @@ After reading the spec required, I wrote an outline for a basic class diagram, s
 - The DB storing the relevant ATM information is persistent. The information will remain in the DB after closing and re-opening the app.
 - Notes can be added to the machine number by using the addCash API request.
 - Service/Controller/Repo layer testing.
+
+## With more time I would...
+
+### Support all other legal denominations and coinage
+I would approach this feature in a very similar way to how I did with just 20s and 50s. There would be a cascade of logic that will try to match the highest value notes first, before trying to match with lower denominations. As using all coins and notes would become a massive piece of logic, I would separate it into a ‘note dispenser’ and ‘coin dispenser’. This would round down the cash required to the closest 5, complete the note dispensing logic, and then complete the coin dispensing logic.
+
+This feature will add complexity in the form of preferring $5/$10 for large sums, at what point would it be too much. The number of different logic components required will make the code susceptible to human error too, lots of testing and clean solutions needed. There will also likely be lots of potential matches of notes.
+
+
+### Multi-Currency support
+Instead of having an ATM that contains the values of note20, note50, etc, as seen in my submitted solution, I would replace them with objects of the relevant currencies. E.g. private Usd usd, private Eur eur. These objects would then contain the note20/note50 values, similar to how I created the cashToAdd object with note50/note20 properties. The dispense logic would change slightly to access the currency object, then the available notes. 
+
+A problem that would occur when working with different currencies is that they do not have equal denominations. E.g. USD has a $1 note, whereas in the UK it would be a £1 coin. Unless you assume all denominations are equal this would add another layer of complexity. 
