@@ -181,16 +181,14 @@ class ATMControllerTest {
                         .andExpect(status().isOk());
     }
 
+    //    Added last minute to quickly clear the DB
     @Test
-    @DisplayName("Failed 404 API call, delete all ATMs from repo, no ATMs")
+    @DisplayName("200 return, delete all ATMs from repo, no ATMs")
     void deleteAtmsFromRepo__noAtms__200withErrorHandling() throws Exception {
-//        Delete all ATMs
         atmRepo.deleteAll();
 
-//        Check they are deleted
         Mockito.when(atmRepo.findAll()).thenReturn(Arrays.asList());
 
-//        Run the API call
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/atm/deleteAllAtms")
                         .contentType(MediaType.APPLICATION_JSON))

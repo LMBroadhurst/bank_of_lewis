@@ -2,21 +2,15 @@ package bank_of_lewis.BOL.service;
 
 import bank_of_lewis.BOL.model.Atm;
 import bank_of_lewis.BOL.model.CashToAdd;
-import bank_of_lewis.BOL.model.Response;
 import bank_of_lewis.BOL.repo.AtmRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
-import static java.util.Map.of;
 import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor

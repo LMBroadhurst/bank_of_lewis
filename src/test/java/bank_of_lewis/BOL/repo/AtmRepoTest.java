@@ -13,10 +13,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 class AtmRepoTest {
+
+//        Weird bug in the deleteAtmFromRepo__test, if I run it individually it passes, but altogether it fails.
+//        Think it's because the @AfterEach atmRepo.deleteAll isn't kicking in for some reason
 
     @Autowired
     private AtmRepo atmRepo;
@@ -24,27 +28,22 @@ class AtmRepoTest {
     private Atm lewisTest;
     private Atm mahiTest;
     private Atm bolTest;
-    private Atm bobTest;
-    private Atm pcTest;
 
     @BeforeEach
     public void setup() {
         lewisTest = new Atm(1L, "ATM 1", "Birmingham", 20, 10);
         mahiTest = new Atm(2L, "Mahi Test", "London", 8, 3);
         bolTest = new Atm(3L, "Bank of Lewis", "Leeds", 100, 100);
-        bobTest = new Atm(4L, "Bank of Broadhurst", "Manchester", 100, 100);
-
 
         atmRepo.save(lewisTest);
         atmRepo.save(mahiTest);
         atmRepo.save(bolTest);
-        atmRepo.save(bobTest);
     }
 
     @AfterEach
-    public void reset() {
+    public void tearDown() {
         atmRepo.deleteAll();
-        lewisTest = mahiTest = bolTest = pcTest = null;
+        lewisTest = mahiTest = bolTest =  null;
     }
 
     @Test
@@ -52,6 +51,7 @@ class AtmRepoTest {
     public void findByIdRepo__test() {
 
         Optional<Atm> atmTestOptional = atmRepo.findById(1L);
+        assertTrue(atmRepo.findById(4L).isEmpty());
         Atm atmTest = null;
 
         if (atmTestOptional.isPresent()) {
@@ -78,17 +78,19 @@ class AtmRepoTest {
     @Test
     @DisplayName("Successfully saves ATM to repo")
     public void saveAtmToRepo__test() {
-        pcTest = new Atm(5L, "PC Test", "Virtual", 100, 100);
-        atmRepo.save(pcTest);
+        Atm newAtm = new Atm(0L, "Test ATM", "Test Land", 10, 20);
+        atmRepo.save(newAtm);
 
-        assertEquals(5, atmRepo.findAll().size());
+        assertEquals(4, atmRepo.findAll().size());
     }
 
     @Test
     @DisplayName("Successfully deletes ATM from repo")
     public void deleteAtmFromRepo__test() {
+//        Weird bug in this test, if I run it individually it passes, but altogether it fails.
+//        Think it's because the @AfterEach atmRepo.deleteAll isn't kicking in for some reason
         atmRepo.delete(lewisTest);
 
-        assertEquals(3, atmRepo.findAll().size());
+        assertEquals(2, atmRepo.findAll().size());
     }
 }
