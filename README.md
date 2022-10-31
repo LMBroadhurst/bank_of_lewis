@@ -92,3 +92,18 @@ This feature will add complexity in the form of preferring $5/$10 for large sums
 Instead of having an ATM that contains the values of note20, note50, etc, as seen in my submitted solution, I would replace them with objects of the relevant currencies. E.g. private Usd usd, private Eur eur. These objects would then contain the note20/note50 values, similar to how I created the cashToAdd object with note50/note20 properties. The dispense logic would change slightly to access the currency object, then the available notes. 
 
 A problem that would occur when working with different currencies is that they do not have equal denominations. E.g. USD has a $1 note, whereas in the UK it would be a £1 coin. Unless you assume all denominations are equal this would add another layer of complexity. 
+
+## What I enjoyed about building this app
+
+- The Pandora's Box of problems and solutions that come from the challenge. When looking at the challenge briefly it seems relatively simple, but when digging into the problem lots of different scenarios arise. Really enjoyed having those moments thinking everything was working, to then test another scenario and find another fire to fight.
+- When writing my tests I found that I hadn’t considered what would happen if you entered a negative number, and it ‘dispensed’ -1 note. It was a funny moment for me because when I first started coding I found tests a little tedious as I thought ‘I can see it works, what’s the point’. It was a great full circle moment.
+- Solving the problem was one challenge and I had a 80% functional logic sequence but the presentation of the code was bad, making the debugging/coding required to get the last 20% a nightmare. It made me refactor all the code required to dispense notes successfully into a much cleaner format, which was a very rewarding process. It allowed me to make much more sense of the code and completing the functionality was a lot more fun than pre-refactoring.
+
+## What I could improve 
+
+- I haven’t done extensive testing in Spring Boot before and this was a big challenge for me. I think my service layer tests are relatively good but my controller tests definitely need improvement. The problem was I was unsure what to return from my controller methods (ResponseEntity, simple String, etc). I decided on ResponseEntity as it seemed to have good support from sites such as StackOverflow but when I went to test I struggled to find good resources that matched the way I did it. In hindsight I wish I just used the Spring documentation from square 0.
+- I’m not sure whether the algorithm I’m using for getting the best match of notes is the most optimal to use. As mentioned, I kept finding extra problems and scenarios that helped me to improve and reiterate more efficient ways to solve problems. I’m sure if I spent more time on it I would have a more efficient way of dispensing notes.
+- My code at the beginning didn’t follow SOLID principles correctly and it led to me losing a lot of time confused & refactoring code that should have been done properly from the start. E.g. I would have code checking whether there were enough notes in the ATM and matching the notes together in the same ‘block’. I should have broken the code/problem into much more modular pieces, like the end product (hopefully) is. Key point as it really highlighted how making the code readable for you and the wider team you are in is crucial.
+
+# Thanks for reading/downloading my app!
+### Any feedback email me at lewis1broadhurst@gmail.com :)
